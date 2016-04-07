@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:id="@+id/grid_item_movie_frame"
-    android:padding="@dimen/zero_padding">
-
-    <ImageView
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/gridimageView"
+        android:id="@+id/grid_image_View"
         android:padding="@dimen/zero_padding"
         android:contentDescription="@string/Movie_Poster"/>
-
-</LinearLayout>

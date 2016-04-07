@@ -2,6 +2,7 @@ package com.example.jake.popularmovies;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,11 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 
-/**
- * Created by jake on 3/19/16.
- */
+
 public class MovieAdapter extends ArrayAdapter<Movie> {
 
     Context context;
@@ -47,16 +47,49 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
             convertView = inflater.inflate(layoutId, parent, false);
         }
 
-        // Get the url w185
+        ImageView moviePoster= (ImageView)convertView;
+        moviePoster.setAdjustViewBounds(true);
+
+        // Get the url
         String url = URL_BASE + data.get(position).getUrl();
 
+        // Get picasso transformation
+        PicassoTransformation transformation = new PicassoTransformation(moviePoster);
+
         // Put the data in the view
-        ImageView gridImage =  (ImageView)convertView.findViewById(R.id.gridimageView);
         Picasso.with(context)
                 .load(url)
-                .resize(width, 0) // set height to 0 so picasso will scale the image
-                .into(gridImage);
+                .error(R.drawable.ic_info_black_24dp)
+                .transform(transformation)
+                .into( moviePoster);
 
         return convertView;
+    }
+
+    public class ImageTransformation {
+
+        public  Transformation getTransformation(final ImageView imageView) {
+            return new Transformation() {
+
+                @Override
+                public Bitmap transform(Bitmap source) {
+                    int targetWidth = imageView.getWidth();
+
+                    double aspectRatio = (double) source.getHeight() / (double) source.getWidth();
+                    int targetHeight = (int) (targetWidth * aspectRatio);
+                    Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+                    if (result != source) {
+                        // Same bitmap is returned if sizes are the same
+                        source.recycle();
+                    }
+                    return result;
+                }
+
+                @Override
+                public String key() {
+                    return "transformation" + " desiredWidth";
+                }
+            };
+        }
     }
 }
